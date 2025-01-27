@@ -2,12 +2,37 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: dymall-mbtt-service  # 添加应用程序名称
   profiles:
     active: dev
   main:
     allow-circular-references: true
-  datasource:
-    druid:
-
+  datasource: # 数据库连接URL，动态引用 `dy.db.host`，记得数据库要换成“dymall”的名字
+    url: jdbc:mysql://${dy.db.host}:3306/dymall?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root # 数据库用户名
+    password: ${dy.db.pw} # 数据库密码，动态引用 `dy.db.pw`
+  mvc:
+      throw-exception-if-no-handler-found: true
 
 mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: cn.mbtt.service.domain.po
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    cn:
+      # 设置不同包的日志级别
+      mbtt:
+        mapper: debug # `mapper` 包的日志级别为debug，用于详细调试SQL操作
+        service: info # `service` 包的日志级别为info，记录一般服务信息
+        controller: info # `controller` 包的日志级别为info，记录请求信息
+  pattern:
+    dateformat: HH:mm:ss:SSS # 日志日期格式，包含时分秒及毫秒
+  file:
+    path: "logs/${spring.application.name}" # 日志文件存储路径，使用应用程序名称创建日志文件夹
