@@ -2,12 +2,15 @@ server:
   port: 8080
 
 spring:
-  profiles:
-    active: dev
-  main:
-    allow-circular-references: true
-  datasource:
-    druid:
-
-
+application:
+name: dymall-mall-mbtt
+#配置数据库的连接信息
+datasource:
+url: jdbc:mysql://localhost:3306/dymall
+driver-class-name: com.mysql.cj.jdbc.Driver
+username: root
+password: 20001113zwy
+#Mybatis的相关配置
 mybatis:
+configuration:
+log-impl: org.apache.ibatis.logging.stdout.StdOuut Impl
