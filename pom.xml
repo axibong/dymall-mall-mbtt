@@ -120,9 +120,14 @@
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash-logback.version}</version>
             </dependency>
+<!--             springsecurity 相关-->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-security</artifactId>-->
+<!--            </dependency>-->
         </dependencies>
-
     </dependencyManagement>
+
     <dependencies>
         <!-- lombok 管理 -->
         <dependency>

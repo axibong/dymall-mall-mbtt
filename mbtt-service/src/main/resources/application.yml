@@ -14,7 +14,13 @@ spring:
     username: root # 数据库用户名
     password: ${dy.db.pw} # 数据库密码，动态引用 `dy.db.pw`
   mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
       throw-exception-if-no-handler-found: true
+  security:
+    user: #暂时写了明文密码方便测试，能快速登录并访问被 Spring Security 保护的接口。
+      name: admin
+      password: 123456
 
 mybatis:
   #mapper配置文件
@@ -36,3 +42,29 @@ logging:
     dateformat: HH:mm:ss:SSS # 日志日期格式，包含时分秒及毫秒
   file:
     path: "logs/${spring.application.name}" # 日志文件存储路径，使用应用程序名称创建日志文件夹
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: dymall-secret #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24*7)
+  tokenHead: 'Bearer '  #JWT负载中拿到开头
+
+secure:
+  ignored:
+    urls: #安全路径白名单
+      - /swagger-ui/
+      - /swagger-resources/**
+      - /**/v2/api-docs
+      - /**/*.html
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.map
+      - /favicon.ico
+      - /druid/**
+      - /actuator/**
+      - /sso/**
+      - /home/**
+      - /product/**
+      - /brand/**
+      - /alipay/**
