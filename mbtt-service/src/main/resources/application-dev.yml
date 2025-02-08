@@ -1,8 +1,5 @@
-sky:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+# 数据库相关配置，动态注入的
+dy:
+  db:
     host: localhost
-    port: 3306
-    database:
-    username:
-    password:
+    pw: 123456 #记得替换成自己的数据库密码

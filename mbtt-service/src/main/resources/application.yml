@@ -1,13 +1,39 @@
 server:
-  port: 8080
+  port: 8080  # 设置服务器监听端口为 8080
 
 spring:
+  application:
+    name: dymall-mbtt-service  # 设置应用程序名称
   profiles:
-    active: dev
+    active: dev  # 设置活动的配置文件为 dev，可以根据环境（如 dev、prod）切换
   main:
-    allow-circular-references: true
+    allow-circular-references: true  # 允许 Spring Boot 处理循环依赖
   datasource:
-    druid:
+    url: jdbc:mysql://${dy.db.host}:3306/dymall  # 数据库连接 URL，使用动态引用（dy.db.host）
+    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL 驱动类
+    username: root  # 数据库用户名
+    password: ${dy.db.pw}  # 数据库密码，动态引用（dy.db.pw）
+    # 这里假设你的 dy.db.host 和 dy.db.pw 是外部环境变量，你可以设置它们或使用 .env 文件
 
+  mvc:
+    throw-exception-if-no-handler-found: true  # 如果没有匹配的请求处理程序，则抛出异常
 
 mybatis:
+
+  #mapper-locations: classpath:mapper/*.xml  # MyBatis 映射文件位置，存放你的 XML 映射文件
+  type-handlers-package: cn.mbtt.service.handler  # 指定 TypeHandler 类所在包
+  type-aliases-package: cn.mbtt.service.domain.po  # 指定 MyBatis 映射的 PO（持久化对象）类所在包
+  configuration:
+    map-underscore-to-camel-case: true  # 开启驼峰命名转换，例如数据库表字段 `user_name` 会映射为 Java 对象的 `userName`
+
+logging:
+  level:
+    cn:
+      mbtt:
+        mapper: debug  # 设置 mapper 包的日志级别为 debug，用于详细调试 SQL 操作
+        service: info  # 设置 service 包的日志级别为 info，记录一般服务信息
+        controller: info  # 设置 controller 包的日志级别为 info，记录请求信息
+  pattern:
+    dateformat: HH:mm:ss:SSS  # 日志输出的日期格式，显示时分秒和毫秒
+  file:
+    path: "logs/${spring.application.name}"  # 日志文件的存储路径，以应用程序名称为日志文件夹
