@@ -1,13 +1,47 @@
 server:
-  port: 8080
+  port: 8080  # 购物车服务端口
 
 spring:
-  profiles:
-    active: dev
-  main:
-    allow-circular-references: true
+  application:
+    name: cart-service
+
+  # 数据库相关
+  jpa:
+    hibernate:
+      ddl-auto: update  # 自动更新数据库结构
+    show-sql: true  # 显示SQL
+
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher  # 使用Ant路径匹配
+
+
+  mybatis:
+    mapper-locations: classpath:mapper/*.xml   # Mapper文件的位置
+    type-aliases-package: cn.mbtt.service.domain # 设置PO的路径实体类所在的包
+
+  # Redis：暂时未启用
+  cache:
+    type: redis  # 缓存使用 Redis（暂时不使用）
+
+  redis:
+    enabled: false  # 暂时关闭 Redis
+    host: localhost
+    port: 6379
+    password: ""            # Redis配置了密码，可以写
+    jedis:
+      pool:
+        max-active: 10      # Redis限制同时可以建立的最大连接数
+        max-idle: 5         # 最大空闲连接数
+        min-idle: 1         # 最小空闲连接数
+        max-wait: -1        # 最大等待时间，-1为不限制
+
+
   datasource:
-    druid:
-
-
-mybatis:
+  # url: jdbc:mysql://localhost:3306/dbname
+  # username: root
+  # password: root
+  # driver-class-name: com.mysql.cj.jdbc.Driver
+  # hikari:
+  #   maximum-pool-size: 10
