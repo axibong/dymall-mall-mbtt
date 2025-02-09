@@ -29,4 +29,6 @@ public class User {
     //封装用户地址信息
     private List<UserAddresses> userAddressesList;
 
+    public User(Integer id, String username, String email, String phone, Role role, LocalDateTime createdAt) {
+    }
 }
