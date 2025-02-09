@@ -48,6 +48,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer id) {
+        //参数id为包装类型，有可能为null，所以需要排除id为null的情况
+        if (id == null) {
+            return null;
+        }
         //1. 调用 mapper 接口，根据id查询员工信息，包括：id、username、email、phone、role和创建时间
         User user = userMapper.getUserById(id);
         //2. 判断：判断是否存在这个员工，如果存在，组装查询结果
@@ -59,6 +63,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 }
+
 
 
 
