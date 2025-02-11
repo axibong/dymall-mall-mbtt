@@ -2,15 +2,15 @@ package cn.mbtt.service.service.impl;
 
 import cn.mbtt.service.mapper.UserMapper;
 import cn.mbtt.service.pojo.LoginInfo;
+import cn.mbtt.service.pojo.Result;
 import cn.mbtt.service.pojo.Role;
 import cn.mbtt.service.pojo.User;
 import cn.mbtt.service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -19,6 +19,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 新增用户
+     */
     @Override
     public void save(User user, Boolean isAdmin) {
         user.setCreatedAt(LocalDateTime.now());
@@ -33,6 +36,9 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
     }
 
+    /**
+     * 用户登录
+     */
     @Override
     public LoginInfo login(User user) {
         //1. 调用 mapper 接口，根据用户名和密码查询员工信息
@@ -46,6 +52,9 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * 查询用户信息
+     */
     @Override
     public User getUserById(Integer id) {
         //参数id为包装类型，有可能为null，所以需要排除id为null的情况
@@ -61,6 +70,40 @@ public class UserServiceImpl implements UserService {
         }
         //3. 不存在，返回 null
         return null;
+    }
+    /**
+     * 删除用户
+     */
+    @Override
+    public Result deleteUserById(Integer id) {
+        //参数id为包装类型，有可能为null，所以需要排除id为null的情况
+        if (id == null) {
+            return Result.error("用户ID不能为空，请重新输入");
+        }
+        //1.查询用户信息
+        User user = userMapper.getUserById(id);
+        //2. 判断是否存在这个员工，存在执行删除
+        if (user != null) {
+            userMapper.deleteUserById(id);
+            return Result.success("ID为" + id + "的用户已删除");
+        }
+        //2. 不存在，返回 null
+        return Result.error("用户不存在");
+    }
+
+    /**
+     * 修改密码
+     */
+    @Override
+    public boolean changePassword(Integer id, String oldPassword, String newPassword) {
+        User user = getUserById(id);
+        if (    user != null
+                && StringUtils.equals(user.getPassword(), oldPassword)
+                && !StringUtils.equals(oldPassword, newPassword)){
+            userMapper.changePassword(id, newPassword);
+            return true;
+        }
+        return false;
     }
 }
 
