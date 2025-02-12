@@ -3,14 +3,90 @@ server:
 
 spring:
   application:
-    name: dymall-mall-mbtt
-  #配置数据库的连接信息
-  datasource:
-    url: jdbc:mysql://localhost:3306/dymall
+    name: dymall-mbtt-service  # 添加应用程序名称
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource: # 数据库连接URL，动态引用 `dy.db.host`，记得数据库要换成“dymall”的名字
+    url: jdbc:mysql://${dy.db.host}:3306/dymall?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 20001113zwy
-#Mybatis的相关配置
+    username: root # 数据库用户名
+    password: ${dy.db.pw} # 数据库密码，动态引用 `dy.db.pw`
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER  # 解决 Spring Boot 2.6+ Swagger 兼容问题
+      throw-exception-if-no-handler-found: true
+    static-path-pattern: /**
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+
 mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: cn.mbtt.service.domain.po
+  type-handlers-package: cn.mbtt.service.handler  # 指定 TypeHandler 类所在包
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    cn:
+      # 设置不同包的日志级别
+      mbtt:
+        mapper: debug # `mapper` 包的日志级别为debug，用于详细调试SQL操作
+        service: info # `service` 包的日志级别为info，记录一般服务信息
+        controller: info # `controller` 包的日志级别为info，记录请求信息
+  pattern:
+    dateformat: HH:mm:ss:SSS # 日志日期格式，包含时分秒及毫秒
+  file:
+    path: "logs/${spring.application.name}" # 日志文件存储路径，使用应用程序名称创建日志文件夹
+
+knife4j:
+  enable: true
+  openapi:
+    title: dymall商城接口文档
+    description: "商城接口文档"
+    email: axibong63@gmail.com
+    name: axi
+    version: v1.0.0
+  group:
+    default:
+      group-name: default
+      api-rule: package
+      api-rule-resources:
+        - cn.mbtt.service.controller
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: dymall-secret #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24*7)
+  tokenHead: 'Bearer '  #JWT负载中拿到开头
+
+secure:
+  ignored:
+    urls: #安全路径白名单
+      - /doc.html
+      - /webjars/**
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /v2/api-docs
+      - /v3/api-docs
+      - /**/*.html
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.map
+      - /favicon.ico
+      - /druid/**
+      - /actuator/**
+      - /sso/**
+      - /home/**
+      - /product/**
+      - /brand/**
+      - /alipay/**
+      - /test-db/
+      - /login
+      - /getVerifiCodeImage

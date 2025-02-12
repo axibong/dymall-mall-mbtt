@@ -1,0 +1,160 @@
+14:18:59:845  INFO 90215 --- [main] cn.mbtt.service.MbttApplication          : Starting MbttApplication using Java 1.8.0_422 on Zhuanz.local with PID 90215 (/Users/bong/IdeaProjects/dymall/dymall-mall-mbtt/mbtt-service/target/classes started by bong in /Users/bong/IdeaProjects/dymall/dymall-mall-mbtt)
+14:18:59:847  INFO 90215 --- [main] cn.mbtt.service.MbttApplication          : The following 1 profile is active: "dev"
+14:19:00:260  INFO 90215 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+14:19:00:266  INFO 90215 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Elasticsearch repository interfaces.
+14:19:00:268  INFO 90215 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+14:19:00:270  INFO 90215 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1 ms. Found 0 Reactive Elasticsearch repository interfaces.
+14:19:00:522  INFO 90215 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+14:19:00:527  INFO 90215 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+14:19:00:527  INFO 90215 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.75]
+14:19:00:588  INFO 90215 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+14:19:00:589  INFO 90215 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 716 ms
+14:19:01:237  INFO 90215 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+14:19:01:239  WARN 90215 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
+14:19:02:249  WARN 90215 --- [main] org.apache.tomcat.util.net.NioEndpoint   : Failed to unlock acceptor for [http-nio-8080] because the local address was not available
+14:19:02:250  INFO 90215 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+14:19:02:256 ERROR 90215 --- [http-nio-8080-Acceptor] org.apache.tomcat.util.net.Acceptor      : Socket accept failed
+
+java.nio.channels.AsynchronousCloseException: null
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:205) ~[na:1.8.0_422]
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:256) ~[na:1.8.0_422]
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:548) ~[tomcat-embed-core-9.0.75.jar:9.0.75]
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:79) ~[tomcat-embed-core-9.0.75.jar:9.0.75]
+	at org.apache.tomcat.util.net.Acceptor.run(Acceptor.java:129) ~[tomcat-embed-core-9.0.75.jar:9.0.75]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_422]
+
+14:19:02:269  INFO 90215 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+14:19:02:286 ERROR 90215 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:181) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.DefaultLifecycleProcessor.access$200(DefaultLifecycleProcessor.java:54) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:356) ~[spring-context-5.3.27.jar:5.3.27]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[na:1.8.0_422]
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:155) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:123) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:937) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:586) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) [spring-boot-2.7.12.jar:2.7.12]
+	at cn.mbtt.service.MbttApplication.main(MbttApplication.java:11) [classes/:na]
+Caused by: java.lang.NullPointerException: null
+	at springfox.documentation.spring.web.WebMvcPatternsRequestConditionWrapper.getPatterns(WebMvcPatternsRequestConditionWrapper.java:56) ~[springfox-spring-webmvc-3.0.0.jar:3.0.0]
+	at springfox.documentation.RequestHandler.sortedPaths(RequestHandler.java:113) ~[springfox-core-3.0.0.jar:3.0.0]
+	at springfox.documentation.spi.service.contexts.Orderings.lambda$byPatternsCondition$3(Orderings.java:89) ~[springfox-spi-3.0.0.jar:3.0.0]
+	at java.util.Comparator.lambda$comparing$77a9974f$1(Comparator.java:469) ~[na:1.8.0_422]
+	at java.util.TimSort.countRunAndMakeAscending(TimSort.java:355) ~[na:1.8.0_422]
+	at java.util.TimSort.sort(TimSort.java:220) ~[na:1.8.0_422]
+	at java.util.Arrays.sort(Arrays.java:1512) ~[na:1.8.0_422]
+	at java.util.ArrayList.sort(ArrayList.java:1464) ~[na:1.8.0_422]
+	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:392) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[na:1.8.0_422]
+	at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:708) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:1.8.0_422]
+	at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:566) ~[na:1.8.0_422]
+	at springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider.requestHandlers(WebMvcRequestHandlerProvider.java:81) ~[springfox-spring-webmvc-3.0.0.jar:3.0.0]
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193) ~[na:1.8.0_422]
+	at java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1384) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:482) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[na:1.8.0_422]
+	at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:708) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:1.8.0_422]
+	at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:566) ~[na:1.8.0_422]
+	at springfox.documentation.spring.web.plugins.AbstractDocumentationPluginsBootstrapper.withDefaults(AbstractDocumentationPluginsBootstrapper.java:107) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at springfox.documentation.spring.web.plugins.AbstractDocumentationPluginsBootstrapper.buildContext(AbstractDocumentationPluginsBootstrapper.java:91) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at springfox.documentation.spring.web.plugins.AbstractDocumentationPluginsBootstrapper.bootstrapDocumentationPlugins(AbstractDocumentationPluginsBootstrapper.java:82) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at springfox.documentation.spring.web.plugins.DocumentationPluginsBootstrapper.start(DocumentationPluginsBootstrapper.java:100) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:178) ~[spring-context-5.3.27.jar:5.3.27]
+	... 14 common frames omitted
+
+14:20:13:755  INFO 90963 --- [main] cn.mbtt.service.MbttApplication          : Starting MbttApplication using Java 1.8.0_422 on Zhuanz.local with PID 90963 (/Users/bong/IdeaProjects/dymall/dymall-mall-mbtt/mbtt-service/target/classes started by bong in /Users/bong/IdeaProjects/dymall/dymall-mall-mbtt)
+14:20:13:756  INFO 90963 --- [main] cn.mbtt.service.MbttApplication          : The following 1 profile is active: "dev"
+14:20:14:176  INFO 90963 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+14:20:14:183  INFO 90963 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 4 ms. Found 0 Elasticsearch repository interfaces.
+14:20:14:185  INFO 90963 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+14:20:14:187  INFO 90963 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1 ms. Found 0 Reactive Elasticsearch repository interfaces.
+14:20:14:446  INFO 90963 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+14:20:14:451  INFO 90963 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+14:20:14:451  INFO 90963 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.75]
+14:20:14:519  INFO 90963 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+14:20:14:519  INFO 90963 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 738 ms
+14:20:15:159  INFO 90963 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+14:20:15:161  WARN 90963 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
+14:20:16:172  WARN 90963 --- [main] org.apache.tomcat.util.net.NioEndpoint   : Failed to unlock acceptor for [http-nio-8080] because the local address was not available
+14:20:16:173  INFO 90963 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+14:20:16:177 ERROR 90963 --- [http-nio-8080-Acceptor] org.apache.tomcat.util.net.Acceptor      : Socket accept failed
+
+java.nio.channels.AsynchronousCloseException: null
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:205) ~[na:1.8.0_422]
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:256) ~[na:1.8.0_422]
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:548) ~[tomcat-embed-core-9.0.75.jar:9.0.75]
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:79) ~[tomcat-embed-core-9.0.75.jar:9.0.75]
+	at org.apache.tomcat.util.net.Acceptor.run(Acceptor.java:129) ~[tomcat-embed-core-9.0.75.jar:9.0.75]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_422]
+
+14:20:16:191  INFO 90963 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+14:20:16:207 ERROR 90963 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:181) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.DefaultLifecycleProcessor.access$200(DefaultLifecycleProcessor.java:54) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:356) ~[spring-context-5.3.27.jar:5.3.27]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[na:1.8.0_422]
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:155) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:123) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:937) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:586) ~[spring-context-5.3.27.jar:5.3.27]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) [spring-boot-2.7.12.jar:2.7.12]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) [spring-boot-2.7.12.jar:2.7.12]
+	at cn.mbtt.service.MbttApplication.main(MbttApplication.java:11) [classes/:na]
+Caused by: java.lang.NullPointerException: null
+	at springfox.documentation.spring.web.WebMvcPatternsRequestConditionWrapper.getPatterns(WebMvcPatternsRequestConditionWrapper.java:56) ~[springfox-spring-webmvc-3.0.0.jar:3.0.0]
+	at springfox.documentation.RequestHandler.sortedPaths(RequestHandler.java:113) ~[springfox-core-3.0.0.jar:3.0.0]
+	at springfox.documentation.spi.service.contexts.Orderings.lambda$byPatternsCondition$3(Orderings.java:89) ~[springfox-spi-3.0.0.jar:3.0.0]
+	at java.util.Comparator.lambda$comparing$77a9974f$1(Comparator.java:469) ~[na:1.8.0_422]
+	at java.util.TimSort.countRunAndMakeAscending(TimSort.java:355) ~[na:1.8.0_422]
+	at java.util.TimSort.sort(TimSort.java:220) ~[na:1.8.0_422]
+	at java.util.Arrays.sort(Arrays.java:1512) ~[na:1.8.0_422]
+	at java.util.ArrayList.sort(ArrayList.java:1464) ~[na:1.8.0_422]
+	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:392) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.Sink$ChainedReference.end(Sink.java:258) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[na:1.8.0_422]
+	at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:708) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:1.8.0_422]
+	at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:566) ~[na:1.8.0_422]
+	at springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider.requestHandlers(WebMvcRequestHandlerProvider.java:81) ~[springfox-spring-webmvc-3.0.0.jar:3.0.0]
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193) ~[na:1.8.0_422]
+	at java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1384) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:482) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[na:1.8.0_422]
+	at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:708) ~[na:1.8.0_422]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:1.8.0_422]
+	at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:566) ~[na:1.8.0_422]
+	at springfox.documentation.spring.web.plugins.AbstractDocumentationPluginsBootstrapper.withDefaults(AbstractDocumentationPluginsBootstrapper.java:107) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at springfox.documentation.spring.web.plugins.AbstractDocumentationPluginsBootstrapper.buildContext(AbstractDocumentationPluginsBootstrapper.java:91) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at springfox.documentation.spring.web.plugins.AbstractDocumentationPluginsBootstrapper.bootstrapDocumentationPlugins(AbstractDocumentationPluginsBootstrapper.java:82) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at springfox.documentation.spring.web.plugins.DocumentationPluginsBootstrapper.start(DocumentationPluginsBootstrapper.java:100) ~[springfox-spring-web-3.0.0.jar:3.0.0]
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:178) ~[spring-context-5.3.27.jar:5.3.27]
+	... 14 common frames omitted
+
