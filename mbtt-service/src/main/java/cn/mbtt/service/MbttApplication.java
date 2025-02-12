@@ -14,7 +14,6 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @SpringBootApplication(scanBasePackages = "cn.mbtt.service")
 @EnableKnife4j
 @EnableOpenApi  // 让 Knife4j 正确加载
-//@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 public class MbttApplication {
     public static void main(String[] args) {
         SpringApplication.run(MbttApplication.class, args);

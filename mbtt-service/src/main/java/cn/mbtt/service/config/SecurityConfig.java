@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -38,10 +37,6 @@ public class SecurityConfig {
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
-//    @Autowired(required = false)
-//    private DynamicSecurityService dynamicSecurityService;
-//    @Autowired(required = false)
-//    private DynamicSecurityFilter dynamicSecurityFilter;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -71,37 +66,10 @@ public class SecurityConfig {
                 //自定义权限拦截器JWT过滤器
                 .and()
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        //有动态权限配置时添加动态权限校验过滤器
-//        if(dynamicSecurityService!=null){
-//            registry.and().addFilterBefore(dynamicSecurityFilter, FilterSecurityInterceptor.class);
-//        }
+
         return httpSecurity.build();
     }
 
-    //方便测试：修改 MallSecurityConfig，让 UserDetailsService 直接返回一个 硬编码的用户，不去查询数据库
-//        @Bean
-//        public UserDetailsService userDetailsService() {
-//            return username -> {
-//                if ("testUser".equals(username)) {
-//                    return User.withUsername("testUser")
-//                            .password(new BCryptPasswordEncoder().encode("testPassword"))
-//                            .roles("USER")
-//                            .build();
-//                } else if ("admin".equals(username)) {
-//                    return User.withUsername("admin")
-//                            .password(new BCryptPasswordEncoder().encode("123456"))
-//                            .roles("ADMIN")
-//                            .build();
-//                } else {
-//                    throw new UsernameNotFoundException("用户不存在: " + username);
-//                }
-//            };
-//        }
-
-//        @Bean
-//        public PasswordEncoder passwordEncoder() {
-//            return new BCryptPasswordEncoder(); // 使用 BCrypt 进行密码加密
-//        }
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
