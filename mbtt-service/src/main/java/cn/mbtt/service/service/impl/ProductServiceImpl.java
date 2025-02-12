@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Products updateProduct(Products product) {
-        // 检查商品是否存在
+        // 检查商品是否存在 避免空指针异常（NullPointerException, NPE）
         Optional<Products> existingProduct = Optional.ofNullable(productMapper.findById(product.getId()));
         
         if (existingProduct.isPresent()) {
@@ -42,8 +42,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-public boolean deleteProduct(Long productId) {
-    // 检查商品是否存在
+    public boolean deleteProduct(Long productId) {
+    // 检查商品是否存在 避免空指针异常（NullPointerException, NPE）
     Optional<Products> product = Optional.ofNullable(productMapper.findById(productId));
 
     if (product.isPresent()) {

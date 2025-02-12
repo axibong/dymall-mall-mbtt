@@ -26,6 +26,7 @@ mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: cn.mbtt.service.domain.po
+  type-handlers-package: cn.mbtt.service.handler  # 指定 TypeHandler 类所在包
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
