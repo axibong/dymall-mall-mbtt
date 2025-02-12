@@ -15,12 +15,12 @@ spring:
     password: ${dy.db.pw} # 数据库密码，动态引用 `dy.db.pw`
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ANT_PATH_MATCHER  # 解决 Spring Boot 2.6+ Swagger 兼容问题
       throw-exception-if-no-handler-found: true
-  security:
-    user: #暂时写了明文密码方便测试，能快速登录并访问被 Spring Security 保护的接口。
-      name: admin
-      password: 123456
+    static-path-pattern: /**
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
 
 mybatis:
   #mapper配置文件
@@ -43,6 +43,21 @@ logging:
   file:
     path: "logs/${spring.application.name}" # 日志文件存储路径，使用应用程序名称创建日志文件夹
 
+knife4j:
+  enable: true
+  openapi:
+    title: dymall商城接口文档
+    description: "商城接口文档"
+    email: axibong63@gmail.com
+    name: axi
+    version: v1.0.0
+  group:
+    default:
+      group-name: default
+      api-rule: package
+      api-rule-resources:
+        - cn.mbtt.service.controller
+
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
   secret: dymall-secret #JWT加解密使用的密钥
@@ -52,9 +67,12 @@ jwt:
 secure:
   ignored:
     urls: #安全路径白名单
-      - /swagger-ui/
+      - /doc.html
+      - /webjars/**
+      - /swagger-ui.html
       - /swagger-resources/**
-      - /**/v2/api-docs
+      - /v2/api-docs
+      - /v3/api-docs
       - /**/*.html
       - /**/*.js
       - /**/*.css
@@ -68,3 +86,6 @@ secure:
       - /product/**
       - /brand/**
       - /alipay/**
+      - /test-db/
+      - /login
+      - /getVerifiCodeImage

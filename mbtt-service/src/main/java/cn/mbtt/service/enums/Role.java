@@ -1,4 +1,4 @@
-package cn.mbtt.service.pojo;
+package cn.mbtt.service.enums;
 
 public enum Role {
     user, admin

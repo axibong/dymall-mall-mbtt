@@ -53,19 +53,16 @@ public class SecurityConfig {
         }
         //允许跨域请求的OPTIONS请求
         registry.antMatchers(HttpMethod.OPTIONS)
-                .permitAll()
-                .antMatchers("/login", "/register").permitAll(); //放行登录和注册接口
+                .permitAll();
         //任何请求都需要身份认证
-        registry.and()
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                //关闭跨站请求防护及不使用session
+        registry
+                .anyRequest().authenticated()  // 直接在此处配置
                 .and()
+                .csrf().disable()
                 .csrf()
                 .disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 //自定义权限拒绝处理类
                 .and()
                 .exceptionHandling()
