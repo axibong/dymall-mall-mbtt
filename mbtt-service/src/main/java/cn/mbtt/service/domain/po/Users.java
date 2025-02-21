@@ -1,5 +1,6 @@
 package cn.mbtt.service.domain.po;
 
+import cn.mbtt.service.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
