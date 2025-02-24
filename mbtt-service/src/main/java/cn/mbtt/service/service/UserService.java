@@ -1,6 +1,7 @@
 package cn.mbtt.service.service;
 
 import cn.mbtt.common.result.Result;
+import cn.mbtt.service.domain.dto.UserSaveDTO;
 import cn.mbtt.service.domain.po.LoginInfo;
 import cn.mbtt.service.domain.po.Users;
 
@@ -9,7 +10,7 @@ public interface UserService {
 
 
     //创建用户
-    void save(Users user);
+    void save(UserSaveDTO user);
 
     //用户登陆
     LoginInfo login(String username, String password);

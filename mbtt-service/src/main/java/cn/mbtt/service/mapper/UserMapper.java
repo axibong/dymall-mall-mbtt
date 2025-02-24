@@ -13,9 +13,9 @@ public interface UserMapper {
     /**
      * 新增用户基本信息
      */
-    @Insert("insert into users(username, password, email, phone, avatar_url, deleted_at)" +
-            "values (#{username},#{password},#{email},#{phone},#{avatarUrl},#{deletedAt})")
-    void insert(Users user);
+    @Insert("insert into users(username, password, email, phone, avatar_url, deleted_at, role, status, created_at, updated_at)" +
+            "values (#{username},#{password},#{email},#{phone},#{avatarUrl},#{role},#{status},#{createdAt},#{updatedAt})")
+    void insert(Users users);
 
     /**
      * 根据用户名和密码查询员工信息

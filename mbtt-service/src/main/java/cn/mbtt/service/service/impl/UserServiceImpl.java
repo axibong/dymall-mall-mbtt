@@ -3,8 +3,11 @@ package cn.mbtt.service.service.impl;
 import cn.mbtt.common.exception.ForbiddenException;
 import cn.mbtt.common.exception.UnauthorizedException;
 import cn.mbtt.common.result.Result;
+import cn.mbtt.service.domain.dto.UserSaveDTO;
 import cn.mbtt.service.domain.po.LoginInfo;
+import cn.mbtt.service.domain.po.PaymentRecords;
 import cn.mbtt.service.domain.po.Users;
+import cn.mbtt.service.enums.PayStatusEnum;
 import cn.mbtt.service.enums.Role;
 import cn.mbtt.service.mapper.UserMapper;
 import cn.mbtt.service.service.UserService;
@@ -23,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -39,13 +43,20 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void save(Users user) {
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
-        user.setRole(String.valueOf(Role.user));
-        user.setStatus(1);
+    public void save(UserSaveDTO userSaveDTO) {
+        //1.构建users
+        Users users = new Users();
+        users.setUsername(userSaveDTO.getUsername());
+        users.setPassword(userSaveDTO.getPassword());
+        users.setEmail(userSaveDTO.getEmail());
+        users.setPhone(userSaveDTO.getPhone());
+        users.setAvatarUrl(userSaveDTO.getAvatarUrl());
+        users.setRole(String.valueOf(Role.user));
+        users.setStatus(1);
+        users.setCreatedAt(LocalDateTime.now());
+        users.setUpdatedAt(LocalDateTime.now());
 
-        userMapper.insert(user);
+        userMapper.insert(users);
     }
 
 

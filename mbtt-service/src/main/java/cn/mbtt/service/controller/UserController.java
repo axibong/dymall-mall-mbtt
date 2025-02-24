@@ -1,6 +1,7 @@
 package cn.mbtt.service.controller;
 import cn.mbtt.common.result.CommonResult;
 import cn.mbtt.common.result.Result;
+import cn.mbtt.service.domain.dto.UserSaveDTO;
 import cn.mbtt.service.domain.po.Users;
 import cn.mbtt.service.service.UserService;
 import cn.mbtt.service.utils.JwtTokenUtil;
@@ -26,7 +27,7 @@ public class UserController  {
 
     @ApiOperation("新增用户")
     @PostMapping
-    public Result save(@RequestBody @ApiParam("用户信息") Users user){
+    public Result save(@RequestBody @ApiParam("用户信息") UserSaveDTO user){
         log.info("请求参数user：{}", user);
         userService.save(user);
         return Result.success();
