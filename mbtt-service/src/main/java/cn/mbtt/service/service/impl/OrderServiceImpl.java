@@ -1,5 +1,6 @@
 package cn.mbtt.service.service.impl;
 
+import cn.mbtt.common.exception.OrderBusinessException;
 import cn.mbtt.common.result.PageResult;
 import cn.mbtt.common.utils.BeanUtils;
 import cn.mbtt.service.build.OrderItemBuilder;
@@ -18,13 +19,13 @@ import cn.mbtt.service.service.UserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,62 @@ public class OrderServiceImpl implements OrderService {
         // 将订单转换为 VO 以供前端展示
         return builder.toOrderVO();
     }
+
+    @Transactional
+    @Override
+    public void cancelOrder(Long orderId) {
+        // 获取当前用户的ID
+        Long userId = userService.getCurrentUser().getId();
+
+        // 根据订单ID查询订单
+        Orders orders = orderMapper.queryById(orderId);
+        if (orders == null) {
+            throw new OrderBusinessException("订单不存在");
+        }
+
+        // 判断当前用户是否是该订单的所有者
+        if (!orders.getUserId().equals(userId)) {
+            throw new OrderBusinessException("无权操作该订单");
+        }
+
+        // 判断订单状态是否可以取消（假设状态 > 0 表示订单已经支付或已发货等，不允许取消）
+        if (orders.getStatus() > 0) {
+            throw new OrderBusinessException("当前状态不允许取消");
+        }
+
+        // 判断订单创建时间是否超过了30分钟，超过则不能取消
+        if (orders.getCreatedAt() != null &&
+                LocalDateTime.now().isAfter(orders.getCreatedAt().plusMinutes(30))) {
+            throw new OrderBusinessException("已超过可取消时间");
+        }
+
+        // 更新订单状态为取消，设置取消时间
+        orders.setStatus(-1); // -1 表示取消状态
+        orders.setCancelTime(LocalDateTime.now());
+
+        // 设置取消原因，若取消原因为空，则默认设置为“用户主动取消”
+        String cancelReason = "";
+        orders.setCancelReason(StringUtils.hasText(cancelReason) ? cancelReason : "用户主动取消");
+
+        // 更新订单信息
+        orderMapper.update(orders);
+
+        // 执行取消后的处理逻辑（解锁库存,退钱）
+        afterCancelHandler(orders);
+    }
+
+    private void afterCancelHandler(Orders orders) {
+//        // 解锁库存：取消订单后，释放商品库存
+//        List<OrderItems> orderItems = orderItemMapper.selectByOrderId(orders.getId());
+//        for (OrderItems orderItem : orderItems) {
+//            int count = stockService.releaseStock(orderItem.getProductSkuId(), orderItem.getQuantity());
+//            if (count == 0) {
+//                throw new OrderBusinessException("库存不足，无法释放！");
+//            }
+//        }
+    }
+
+
 //TODO 写全
 //    @Transactional
 //    @Override

@@ -3,17 +3,14 @@ package cn.mbtt.service.handler;
 import cn.mbtt.common.exception.BizIllegalException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public abstract class AbstractPayStrategyHandler
 {
     //第二种写法，用SpringContextHolder类在哪个包？ + 工厂模式
     @Autowired
-    private Map<String, AbstractPayStrategyHandler> paymentTypeStrategyMap = new HashMap<>();
+    private Map<String, AbstractPayStrategyHandler> paymentTypeStrategyMap;
 
     public AbstractPayStrategyHandler choose(String paymentType)
     {
@@ -28,3 +25,4 @@ public abstract class AbstractPayStrategyHandler
 
     public abstract String paymentType();
 }
+

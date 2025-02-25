@@ -55,7 +55,7 @@ public class OrderItemBuilder {
     }
 
     /**
-     * 2. 构建订单商品项（假设从购物车获取商品数据）
+     * 2. 构建订单商品项
      * 从购物车中获取商品数据，并根据商品数据构建订单商品项。
      */
     public OrderItemBuilder builderOrderItems() {

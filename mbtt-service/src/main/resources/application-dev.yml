@@ -1,5 +1,5 @@
 # 数据库相关配置，动态注入的
 dy:
   db:
-    host: localhost
-    pw: simple29 #记得替换成自己的数据库密码
+    host: localhost  # 修改为指定的IP
+    pw: simple29 # 记得替换成自己的数据库密码

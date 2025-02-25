@@ -33,6 +33,4 @@ public class PayServiceImpl implements PayService {
         AbstractPayStrategyHandler chooseHandler = abstractPayStrategyHandler.choose(PaymentTypeEnum.getPaymentTypeByCode(payReqDTO.getPaymentType()));
         chooseHandler.pay();
     }
-
-
 }

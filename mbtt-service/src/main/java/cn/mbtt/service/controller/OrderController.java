@@ -41,7 +41,7 @@ public class OrderController {
         return CommonResult.success(orderVO);
     }
 
-    //TODO 之后和支付接口对接，看需要传入哪些数据
+    //TODO 直接写成支付回调即可
 //    @ApiOperation("更新订单支付状态")
 //    @PutMapping("/{orderId}/payment")
 //    public CommonResult<OrderVO> updatePaymentStatus(@PathVariable Long orderId, @RequestBody PaymentStatusDTO paymentStatusDTO) {
@@ -49,13 +49,12 @@ public class OrderController {
 //        return CommonResult.success(updatedOrder);
 //    }
 
-    //TODO
-//    @ApiOperation("取消订单")
-//    @PutMapping("/{orderId}/cancel")
-//    public CommonResult<Void> cancelOrder(@PathVariable Long orderId) {
-//        orderService.cancelOrder(orderId);
-//        return CommonResult.success(null);
-//    }
+    @ApiOperation("取消未支付订单")
+    @PutMapping("/{orderId}/cancel")
+    public CommonResult<Void> cancelOrder(@PathVariable Long orderId) {
+        orderService.cancelOrder(orderId);
+        return CommonResult.success(null);
+    }
 
 
 }

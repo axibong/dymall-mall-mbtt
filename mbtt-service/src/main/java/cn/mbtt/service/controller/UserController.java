@@ -68,7 +68,6 @@ public class UserController  {
         oldPwd= MD5.encrypt(oldPwd);
         newPwd= MD5.encrypt(newPwd);
         return userService.updatePassword(userId, oldPwd, newPwd);
-
     }
 }
 

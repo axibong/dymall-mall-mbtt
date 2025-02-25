@@ -1,5 +1,6 @@
 package cn.mbtt.service.mapper;
 
+import cn.mbtt.service.domain.dto.CartDTO;
 import cn.mbtt.service.domain.po.ShoppingCartItems;
 import org.apache.ibatis.annotations.*;
 
@@ -31,5 +32,17 @@ public interface CartMapper {
     // 更新购物车中商品的数量
     @Update("UPDATE shopping_cart_items SET quantity = #{quantity} WHERE product_id = #{productId} AND user_id = #{userId}")
     void updateNum(@Param("productId") Long productId, @Param("userId") Long userId, @Param("quantity") Integer quantity);
-}
 
+    @Update({
+            "<script>",
+            "    <foreach collection='cartDTO.items' item='item' index='index' open='' separator=';' close=''>",
+            "        INSERT INTO shopping_cart_items (product_id, user_id, quantity, product_name, price) " +
+                    "           VALUES ( #{item.productId},#{cartDTO.userId}, #{item.quantity}, #{item.productName}, #{item.price})",
+            "        ON DUPLICATE KEY UPDATE " +
+                    "           quantity = #{item.quantity}, " +
+                    "    </foreach>",
+            "</script>"
+    })
+    void updateCart(@Param("cartDTO") CartDTO cartDTO);
+
+}
