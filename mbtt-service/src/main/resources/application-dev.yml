@@ -2,4 +2,8 @@
 dy:
   db:
     host: localhost
-    pw: 123456 #记得替换成自己的数据库密码
+    pw: 123 #记得替换成自己的数据库密码
+  es:
+    username:
+    password:
+

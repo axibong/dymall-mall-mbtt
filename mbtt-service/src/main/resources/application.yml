@@ -13,14 +13,35 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL 驱动类
     username: root  # 数据库用户名
     password: ${dy.db.pw}  # 数据库密码，动态引用（dy.db.pw）
-    # 这里假设你的 dy.db.host 和 dy.db.pw 是外部环境变量，你可以设置它们或使用 .env 文件
-
   mvc:
     throw-exception-if-no-handler-found: true  # 如果没有匹配的请求处理程序，则抛出异常
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/, classpath:/META-INF/resources/webjars/  # 配置静态资源路径
+    cors:
+      allowed-origins: "*"  # 允许所有跨域请求
+      allowed-methods: GET, POST, PUT, DELETE, OPTIONS  # 允许的 HTTP 方法
+      allowed-headers: "*"  # 允许的头信息
 
-mybatis:
+  # Elasticsearch 配置
+  elasticsearch:
+    rest:
+      uris: http://localhost:9200  # 你的 Elasticsearch 服务器地址
+      read-timeout: 5s  # 设置连接超时时间
+      connection-timeout: 2s  # 设置连接超时时间
+      username: ${dy.es.username:}  # 如果需要用户名，使用动态注入的值，默认为空
+      password: ${dy.es.password:}  # 如果需要密码，使用动态注入的值，默认为空
+      enabled: true  # 启用 Elasticsearch
+      cluster-name: elasticsearch  # 如果你有多个节点，可以配置 cluster-name
 
-  #mapper-locations: classpath:mapper/*.xml  # MyBatis 映射文件位置，存放你的 XML 映射文件
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
+      path: /swagger-ui/index.html
+
+
+mybatis-plus:
   type-handlers-package: cn.mbtt.service.handler  # 指定 TypeHandler 类所在包
   type-aliases-package: cn.mbtt.service.domain.po  # 指定 MyBatis 映射的 PO（持久化对象）类所在包
   configuration:
@@ -37,3 +58,4 @@ logging:
     dateformat: HH:mm:ss:SSS  # 日志输出的日期格式，显示时分秒和毫秒
   file:
     path: "logs/${spring.application.name}"  # 日志文件的存储路径，以应用程序名称为日志文件夹
+
