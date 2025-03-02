@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -35,11 +36,13 @@ public class Users implements Serializable {
     /**
      * 用户名，唯一，最大长度为50字符。
      */
+    @NotNull(message = "用户名不能为空")
     private String username;
 
     /**
      * 用户密码，使用哈希存储。
      */
+    @NotNull(message = "密码不能为空")
     private String password;
 
     /**

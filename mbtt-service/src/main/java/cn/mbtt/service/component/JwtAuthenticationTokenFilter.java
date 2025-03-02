@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 /**
  * JWT登录授权过滤器
@@ -42,7 +43,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
+        LOGGER.info("All headers: {}", Collections.list(request.getHeaderNames()));
         String authHeader = request.getHeader(this.tokenHeader);
+        LOGGER.info("tokenHeader: {}, authHeader: {}", this.tokenHeader, authHeader);
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length()); // 获取 "Bearer " 后的部分
             String username = jwtTokenUtil.getUserNameFromToken(authToken);

@@ -33,14 +33,15 @@ public interface CartMapper {
     @Update("UPDATE shopping_cart_items SET quantity = #{quantity} WHERE product_id = #{productId} AND user_id = #{userId}")
     void updateNum(@Param("productId") Long productId, @Param("userId") Long userId, @Param("quantity") Integer quantity);
 
-    @Update({
+    @Insert({
             "<script>",
-            "    <foreach collection='cartDTO.items' item='item' index='index' open='' separator=';' close=''>",
-            "        INSERT INTO shopping_cart_items (product_id, user_id, quantity, product_name, price) " +
-                    "           VALUES ( #{item.productId},#{cartDTO.userId}, #{item.quantity}, #{item.productName}, #{item.price})",
-            "        ON DUPLICATE KEY UPDATE " +
-                    "           quantity = #{item.quantity}, " +
-                    "    </foreach>",
+            "INSERT INTO shopping_cart_items (product_id, user_id, quantity) ",
+            "VALUES ",
+            "<foreach collection='cartDTO.items' item='item' index='index' separator=','>",
+            "    (#{item.productId}, #{cartDTO.userId}, #{item.quantity})",
+            "</foreach>",
+            "ON DUPLICATE KEY UPDATE ",
+            "quantity = VALUES(quantity)",
             "</script>"
     })
     void updateCart(@Param("cartDTO") CartDTO cartDTO);

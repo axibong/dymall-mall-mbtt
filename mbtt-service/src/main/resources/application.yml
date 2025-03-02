@@ -24,7 +24,7 @@ spring:
   # Redis配置
   redis:
     host: localhost  # 修改为 localhost
-    port: 6379     # 默认端口号
+    port: 16379     # 默认端口号
     password: simple29  # 根据需要设置密码
     database: 0        # Redis数据库的索引，默认是0
   # RabbitMQ配置

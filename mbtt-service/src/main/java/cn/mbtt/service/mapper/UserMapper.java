@@ -3,31 +3,26 @@ package cn.mbtt.service.mapper;
 import cn.mbtt.service.domain.po.Users;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.data.repository.query.Param;
 
 @Mapper
 public interface UserMapper {
 
     /**
      * 新增用户基本信息
+     *
+     * @return
      */
     @Insert("insert into users(username, password, email, phone, avatar_url, deleted_at)" +
             "values (#{username},#{password},#{email},#{phone},#{avatarUrl},#{deletedAt})")
-    void insert(Users user);
-
-    /**
-     * 根据用户名和密码查询员工信息
-     */
-    @Select("select id, username, password ,status from users where username = #{username}")
-    Users selectByUsernameAndPassword(String user);
-
+    int insert(Users user);
 
     /**
      * 根据id查询员工信息
      */
-    @Select("SELECT id, username, email, phone, role, created_at FROM users WHERE id = #{id}")
+    @Select("SELECT id, username, password , email, phone, role, created_at FROM users WHERE id = #{id}")
     Users getUserById(Long id);
 
     /**
@@ -39,8 +34,8 @@ public interface UserMapper {
     /**
      * 更新用户密码
      */
-    @Update("UPDATE users SET password = #{newPwd} WHERE id = #{id} AND password = #{oldPwd}")
-    int updatePassword(@Param("id") int id, @Param("oldPwd") String oldPwd, @Param("newPwd") String newPwd);
+    @Update("UPDATE users SET password = #{newPwd} WHERE id = #{id}")
+    int updatePassword(@Param("id") int id, @Param("newPwd") String newPwd);
 
     /**
          * 根据用户名查询用户信息

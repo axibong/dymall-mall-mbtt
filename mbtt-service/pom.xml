@@ -110,7 +110,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-<!--        &lt;!&ndash; JSON 处理工具（可选，用于消息内容的序列化/反序列化） &ndash;&gt;-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--        &lt;!&ndash; JSON 处理工具（可选，用于消息内容的序列化/反序列化） &ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba</groupId>-->
 <!--            <artifactId>fastjson</artifactId>-->

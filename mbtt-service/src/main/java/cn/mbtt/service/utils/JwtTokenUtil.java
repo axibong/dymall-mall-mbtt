@@ -40,20 +40,27 @@ public class JwtTokenUtil {
     /**
      * 根据用户信息生成token（直接使用 Users 对象）
      */
+    /**
+     * 根据用户信息生成token
+     */
     public String generateToken(Users user) {
+        if (user == null || user.getUsername() == null || user.getId() == null) {
+            LOGGER.error("生成token失败，用户对象或关键字段为空: {}", user);
+            throw new IllegalArgumentException("用户信息不完整，无法生成token");
+        }
+
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, user.getUsername()); // 直接使用 Users 中的用户名
-        claims.put(CLAIM_KEY_CREATED, new Date()); // 添加创建时间
+        claims.put(CLAIM_KEY_USERNAME, user.getUsername());
+        claims.put(CLAIM_KEY_USER_ID, user.getId()); // 添加 userId
+        claims.put(CLAIM_KEY_CREATED, new Date());
 
-
-        // 生成 JWT Token
+        LOGGER.info("生成token，claims: {}", claims);
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
-
     /**
      * 从token中获取JWT中的负载
      */

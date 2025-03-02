@@ -2,7 +2,9 @@ package cn.mbtt.service.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import cn.mbtt.service.component.CartSyncProducer;
+import cn.mbtt.service.domain.dto.CartDTO;
 import cn.mbtt.service.domain.dto.CartFormDTO;
+import cn.mbtt.service.domain.dto.CartItemDTO;
 import cn.mbtt.service.domain.po.Users;
 import cn.mbtt.service.domain.vo.CartVO;
 import cn.mbtt.service.mapper.CartMapper;
@@ -17,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl1 implements CartService {
@@ -100,7 +104,7 @@ public class CartServiceImpl1 implements CartService {
 
         // 计算总金额
         BigDecimal totalAmount = cartItemVOList.stream()
-                .map(CartVO.CartItemVO::getTotalPrice)
+                .map(cartItem -> cartItem.getTotalPrice() != null ? cartItem.getTotalPrice() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         cartVO.setTotalAmount(totalAmount);
 
@@ -135,23 +139,25 @@ public class CartServiceImpl1 implements CartService {
      * @param userId 用户 ID
      */
     private void syncCartToDatabaseAsync(Long userId) {
-        // 从 Redis 中获取购物车数据
         String cartKey = CART_PREFIX + userId;
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
         Map<String, String> cartItems = hashOps.entries(cartKey);
 
-        // 将购物车信息转换为 JSON 字符串并发送到 RabbitMQ
-        String cartData = convertCartToJson(cartItems);
-        cartSyncProducer.sendCartSyncMessage(userId, cartData);  // 发送消息到 RabbitMQ
-    }
+        // 转换为 CartDTO
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setUserId(userId);
+        List<CartItemDTO> itemList = cartItems.entrySet().stream()
+                .map(entry -> {
+                    CartItemDTO item = new CartItemDTO();
+                    item.setProductId(Long.valueOf(entry.getKey()));
+                    item.setQuantity(Integer.valueOf(entry.getValue()));
+                    // 可选：从数据库填充 productName 和 price
+                    return item;
+                })
+                .collect(Collectors.toList());
+        cartDTO.setItems(itemList);
 
-    /**
-     * 将购物车数据转换为 JSON 格式
-     * @param cartItems 购物车商品信息
-     * @return JSON 字符串
-     */
-    private String convertCartToJson(Map<String, String> cartItems) {
-        // 使用 JSON 序列化工具转换购物车数据为 JSON 字符串
-        return JSONUtil.toJsonStr(cartItems);
+        String cartData = JSONUtil.toJsonStr(cartDTO);
+        cartSyncProducer.sendCartSyncMessage(userId, cartData);
     }
 }
