@@ -16,5 +16,4 @@ public class CartFormDTO {
     @Min(value = 1, message = "商品数量不能少于1")
     private Integer quantity;
 
-    // Getters and Setters
 }

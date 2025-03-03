@@ -8,8 +8,8 @@ spring:
     active: dev
   main:
     allow-circular-references: true
-  datasource: # 数据库连接URL，动态引用 `dy.db.host`，记得数据库要换成“dymall”的名字
-    url: jdbc:mysql://${dy.db.host}:3306/dymall?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+  datasource: # 数据库连接URL，记得数据库名称为“dymall”
+    url: jdbc:mysql://localhost:3306/dymall?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root # 数据库用户名
     password: ${dy.db.pw} # 数据库密码，动态引用 `dy.db.pw`
@@ -21,14 +21,49 @@ spring:
   web:
     resources:
       static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+  # Redis配置
+  redis:
+    host: localhost  # 修改为 localhost
+    port: 16379     # 默认端口号
+    password: simple29  # 根据需要设置密码
+    database: 0        # Redis数据库的索引，默认是0
+  # RabbitMQ配置
+  rabbitmq:
+    host: localhost         # 修改为 localhost
+    port: 5672
+    username: admin         # 生产环境建议修改
+    password: admin         # 生产环境必须修改 RabbitMQ 密码
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual  # 手动确认消息
+        prefetch: 100             # 每次处理100条消息
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    networks:
+      - my-network
+  # Elasticsearch配置
+  data:
+    elasticsearch:
+      rest:
+        uris: http://elasticsearch:9200  # 修改为 localhost
+        connection-timeout: 10s
+        read-timeout: 30s
+      image: elasticsearch:7.17.14
+      networks:
+        - my-network
+      environment:
+        - network.host=0.0.0.0
+        - discovery.type=single-node
+        - ES_JAVA_OPTS=-Xms512m -Xmx512m
 
 mybatis:
-  #mapper配置文件
+  # mapper配置文件
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: cn.mbtt.service.domain.po
   type-handlers-package: cn.mbtt.service.handler  # 指定 TypeHandler 类所在包
   configuration:
-    #开启驼峰命名
+    # 开启驼峰命名
     map-underscore-to-camel-case: true
 
 logging:
@@ -36,13 +71,13 @@ logging:
     cn:
       # 设置不同包的日志级别
       mbtt:
-        mapper: debug # `mapper` 包的日志级别为debug，用于详细调试SQL操作
-        service: info # `service` 包的日志级别为info，记录一般服务信息
-        controller: info # `controller` 包的日志级别为info，记录请求信息
+        mapper: debug  # `mapper` 包的日志级别为 debug，用于详细调试 SQL 操作
+        service: info  # `service` 包的日志级别为 info，记录一般服务信息
+        controller: info  # `controller` 包的日志级别为 info，记录请求信息
   pattern:
-    dateformat: HH:mm:ss:SSS # 日志日期格式，包含时分秒及毫秒
+    dateformat: HH:mm:ss:SSS  # 日志日期格式，包含时分秒及毫秒
   file:
-    path: "logs/${spring.application.name}" # 日志文件存储路径，使用应用程序名称创建日志文件夹
+    path: "logs/${spring.application.name}"  # 日志文件存储路径，使用应用程序名称创建日志文件夹
 
 knife4j:
   enable: true
@@ -60,14 +95,14 @@ knife4j:
         - cn.mbtt.service.controller
 
 jwt:
-  tokenHeader: Authorization #JWT存储的请求头
-  secret: dymall-secret #JWT加解密使用的密钥
-  expiration: 604800 #JWT的超期限时间(60*60*24*7)
-  tokenHead: 'Bearer '  #JWT负载中拿到开头
+  tokenHeader: Authorization  # JWT存储的请求头
+  secret: dymall-secret       # JWT加解密使用的密钥
+  expiration: 604800          # JWT的超期限时间(60*60*24*7)
+  tokenHead: 'Bearer '        # JWT负载中拿到开头
 
 secure:
   ignored:
-    urls: #安全路径白名单
+    urls:  # 安全路径白名单
       - /doc.html
       - /webjars/**
       - /swagger-ui.html

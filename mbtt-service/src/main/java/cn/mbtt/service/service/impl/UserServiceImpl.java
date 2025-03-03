@@ -3,11 +3,8 @@ package cn.mbtt.service.service.impl;
 import cn.mbtt.common.exception.ForbiddenException;
 import cn.mbtt.common.exception.UnauthorizedException;
 import cn.mbtt.common.result.Result;
-import cn.mbtt.service.domain.dto.UserSaveDTO;
 import cn.mbtt.service.domain.po.LoginInfo;
-import cn.mbtt.service.domain.po.PaymentRecords;
 import cn.mbtt.service.domain.po.Users;
-import cn.mbtt.service.enums.PayStatusEnum;
 import cn.mbtt.service.enums.Role;
 import cn.mbtt.service.mapper.UserMapper;
 import cn.mbtt.service.service.UserService;
@@ -26,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -43,63 +39,56 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void save(UserSaveDTO userSaveDTO) {
-        //1.构建users
-        Users users = new Users();
-        users.setUsername(userSaveDTO.getUsername());
-        users.setPassword(userSaveDTO.getPassword());
-        users.setEmail(userSaveDTO.getEmail());
-        users.setPhone(userSaveDTO.getPhone());
-        users.setAvatarUrl(userSaveDTO.getAvatarUrl());
-        users.setRole(String.valueOf(Role.user));
-        users.setStatus(1);
-        users.setCreatedAt(LocalDateTime.now());
-        users.setUpdatedAt(LocalDateTime.now());
-
-        userMapper.insert(users);
+    public void save(Users user) {
+        // 参数校验
+        if (user == null) {
+            throw new IllegalArgumentException("用户信息不能为空");
+        }
+        if (user.getUsername() == null || user.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("用户名不能为空");
+        }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("密码不能为空");
+        }
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setRole(String.valueOf(Role.user));
+        user.setStatus(1);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 插入数据库
+        int rows = userMapper.insert(user);
+        if (rows != 1) {
+            throw new RuntimeException("用户插入失败");
+        }
     }
 
 
     @Override
     public LoginInfo login(String username, String password) {
-        String token = null;
-        Users u = userMapper.selectByUsernameAndPassword(username);
-
-        // 校验用户是否存在
+        Users u = userMapper.selectByUsername(username);
         if (u == null) {
             throw new BadCredentialsException("用户名不存在");
         }
-
+        LOGGER.info("Login user before token generation: {}", u); // 调试
         try {
-            // TODO 测试密码并不是加密的密码，不用工具类验证  1. 校验密码
-
-//            if (!passwordEncoder.matches(password, u.getPassword())) {
-//                throw new BadCredentialsException("密码不正确");
-//            }
-
-            // 2. 校验用户是否被冻结
+            if (!passwordEncoder.matches(password, u.getPassword())) {
+                throw new BadCredentialsException("密码不正确");
+            }
             if (u.getStatus() != 1) {
                 throw new ForbiddenException("用户被冻结");
             }
-
-            // 3. 创建认证对象并将其设置到上下文中
-            // 这里没有传递权限信息，可以传 null
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(u, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 4. 生成 JWT Token
-            token = jwtTokenUtil.generateToken(u);
-
+            String token = jwtTokenUtil.generateToken(u);
+            LOGGER.info("Generated token: {}", token);
             LOGGER.info("登陆成功，员工信息：{}", u);
+            return new LoginInfo(u.getId(), u.getUsername(), token);
         } catch (AuthenticationException e) {
             LOGGER.warn("登录异常:{}", e.getMessage());
-            throw e;  // 抛出异常，交给全局异常处理
+            throw e;
         }
-
-        return new LoginInfo(u.getId(), u.getUsername(), token);
     }
-
 //    @Override
 //    public String refreshToken(String token) {
 //        return jwtTokenUtil.refreshHeadToken(token);
@@ -132,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
         // 获取当前的身份认证信息
         Authentication auth = ctx.getAuthentication();
-
+        System.out.println("Auth: " + auth); // 调试输出
         // 检查身份认证信息是否存在以及用户是否已认证
         if (auth == null || !auth.isAuthenticated()) {
             // 如果没有认证或未认证，抛出未认证异常
@@ -146,18 +135,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result updatePassword(Long userId, String oldPwd, String newPwd) {
-        // 查询用户信息
-        Users users = userMapper.findByIdAndPassword(userId.intValue(), oldPwd);
+        if (userId == null || oldPwd == null || newPwd == null) {
+            return Result.error("参数不能为空");
+        }
 
-        // 如果 不存在，返回失败
+        // 查询用户信息
+        Users users = userMapper.getUserById(userId);
         if (users == null) {
+            return Result.error("用户不存在");
+        }
+        LOGGER.info("User password from DB: {}", users.getPassword());
+        if (!passwordEncoder.matches(oldPwd, users.getPassword())) {
             return Result.error("原密码有误!");
         }
 
-        // 执行密码更新
-        int rows = userMapper.updatePassword(userId.intValue(), oldPwd,newPwd);
+        // 加密新密码并更新
+        String encodedNewPwd = passwordEncoder.encode(newPwd);
+        int rows = userMapper.updatePassword(userId.intValue(), encodedNewPwd);
 
-        // 判断更新是否成功
         if (rows > 0) {
             return Result.success();
         } else {
