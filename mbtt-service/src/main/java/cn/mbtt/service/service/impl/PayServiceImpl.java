@@ -2,6 +2,7 @@ package cn.mbtt.service.service.impl;
 
 import cn.mbtt.service.domain.dto.PayReqDTO;
 import cn.mbtt.service.domain.po.PaymentRecords;
+import cn.mbtt.service.domain.vo.BasePayResultVO;
 import cn.mbtt.service.enums.PayStatusEnum;
 import cn.mbtt.service.enums.PaymentTypeEnum;
 import cn.mbtt.service.handler.AbstractPayStrategyHandler;
@@ -19,7 +20,7 @@ public class PayServiceImpl implements PayService {
     private AbstractPayStrategyHandler abstractPayStrategyHandler;
 
     @Override
-    public void pay(PayReqDTO payReqDTO) {
+    public BasePayResultVO pay(PayReqDTO payReqDTO) {
         //1.构建paymentRecords
         PaymentRecords paymentRecords = new PaymentRecords();
         paymentRecords.setOrderId(payReqDTO.getOrderId());
@@ -30,7 +31,7 @@ public class PayServiceImpl implements PayService {
         //2.paymentRecords插入数据库
         payMapper.insert(paymentRecords);
         //3.获取对应支付策略
-        AbstractPayStrategyHandler chooseHandler = abstractPayStrategyHandler.choose(PaymentTypeEnum.getPaymentTypeByCode(payReqDTO.getPaymentType()));
-        chooseHandler.pay();
+        BasePayResultVO basePayResultVO = abstractPayStrategyHandler.choosePay(payReqDTO, PaymentTypeEnum.getPaymentTypeByCode(payReqDTO.getPaymentType()));
+        return basePayResultVO;
     }
 }
