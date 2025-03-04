@@ -115,11 +115,18 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- 支付宝 -->
+        <!-- 支付宝通用sdk -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.9.28.ALL</version>
+        </dependency>
+        <!-- 支付宝easy sdk -->
+        <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-easysdk -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-easysdk</artifactId>
+            <version>2.2.0</version>
         </dependency>
         <!--        &lt;!&ndash; JSON 处理工具（可选，用于消息内容的序列化/反序列化） &ndash;&gt;-->
 <!--        <dependency>-->

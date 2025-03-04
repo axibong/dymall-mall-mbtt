@@ -17,7 +17,13 @@ public interface OrderMapper {
     @Select("SELECT * FROM orders WHERE id = #{orderId} AND status = 0 AND delete_status = 0;")
     Orders queryById(Long orderId);
 
+    @Select("SELECT * FROM orders WHERE order_no = #{orderNo}")
+    Orders queryByOrderNo(String orderNo);
 
     @Update("UPDATE orders SET status = -1, cancel_time = NOW(), cancel_reason = #{cancelReason} WHERE id = #{orderId}")
     void update(Orders orders);
+
+    //更新支付成功后的订单信息
+    @Update("UPDATE order SET order_no= #{orderNo}, status = #{status}, payment_time = #{paymentTime}")
+    void updatePayOrder(Orders order);
 }
