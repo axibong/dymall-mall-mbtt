@@ -17,7 +17,7 @@ public class OrdersPageQueryDTO {
     private int pageSize = 10; // 默认每页10条记录
 
     @ApiModelProperty("订单状态：1-未付款，2-已付款未发货，3-已发货未确认，4-已完成，5-已取消")
-    private Integer orderStatus;
+    private Integer status;
 
     @ApiModelProperty("支付方式：1-支付宝，2-微信，3-余额支付")
     private Integer paymentType;

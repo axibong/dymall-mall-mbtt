@@ -1,66 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.mbtt.service.mapper.OrderMapper">
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="cn.mbtt.service.mapper.OrderMapper">-->
+<!--    <resultMap id="OrderResultMap" type="cn.mbtt.service.domain.po.Orders">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="orderNo" column="order_no"/>-->
+<!--        <result property="userId" column="user_id"/>-->
+<!--        <result property="totalAmount" column="total_amount"/>-->
+<!--        <result property="actualAmount" column="actual_amount"/>-->
+<!--        <result property="addressSnapshot" column="address_snapshot" typeHandler="cn.mbtt.service.handler.JsonMapTypeHandler"/>-->
+<!--        <result property="status" column="status"/>-->
+<!--        <result property="paymentType" column="payment_type"/>-->
+<!--        <result property="paymentTime" column="payment_time"/>-->
+<!--        <result property="shippingTime" column="shipping_time"/>-->
+<!--        <result property="deliveryTime" column="delivery_time"/>-->
+<!--        <result property="completionTime" column="completion_time"/>-->
+<!--        <result property="cancelTime" column="cancel_time"/>-->
+<!--        <result property="cancelReason" column="cancel_reason"/>-->
+<!--        <result property="createdAt" column="created_at"/>-->
+<!--        <result property="updatedAt" column="updated_at"/>-->
+<!--    </resultMap>-->
 
-    <resultMap id="OrderResultMap" type="cn.mbtt.service.domain.po.Orders">
-        <id property="id" column="id"/>
-        <result property="orderNo" column="order_no"/>
-        <result property="userId" column="user_id"/>
-        <result property="totalAmount" column="total_amount"/>
-        <result property="actualAmount" column="actual_amount"/>
-        <result property="addressSnapshot" column="address_snapshot"
-                typeHandler="cn.mbtt.service.handler.JsonMapTypeHandler"/>
-        <result property="status" column="status"/>
-        <result property="paymentType" column="payment_type"/>
-        <result property="paymentTime" column="payment_time"/>
-        <result property="shippingTime" column="shipping_time"/>
-        <result property="deliveryTime" column="delivery_time"/>
-        <result property="completionTime" column="completion_time"/>
-        <result property="cancelTime" column="cancel_time"/>
-        <result property="cancelReason" column="cancel_reason"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
-    </resultMap>
+<!--    <select id="queryOrders" resultMap="OrderResultMap">-->
+<!--        SELECT id, order_no, user_id, total_amount, actual_amount, address_snapshot, status,-->
+<!--        payment_type, payment_time, shipping_time, delivery_time, completion_time,-->
+<!--        cancel_time, cancel_reason, created_at, updated_at-->
+<!--        FROM orders-->
+<!--        <where>-->
+<!--            <if test="orderStatus != null">AND status = #{orderStatus}</if>-->
+<!--            <if test="paymentType != null">AND payment_type = #{paymentType}</if>-->
+<!--            <if test="orderNo != null and orderNo != ''">AND order_no LIKE CONCAT('%', #{orderNo}, '%')</if>-->
+<!--            <if test="userId != null">AND user_id = #{userId}</if>-->
+<!--            <if test="startDate != null">AND created_at >= #{startDate}</if>-->
+<!--            <if test="endDate != null">AND created_at <= #{endDate}</if>-->
+<!--        </where>-->
+<!--        ORDER BY created_at DESC-->
+<!--    </select>-->
 
-    <select id="queryOrders" resultMap="OrderResultMap">
-        SELECT
-        id,
-        order_no,
-        user_id,
-        total_amount,
-        actual_amount,
-        address_snapshot,
-        status,
-        payment_type,
-        payment_time,
-        shipping_time,
-        delivery_time,
-        completion_time,
-        cancel_time,
-        cancel_reason,
-        created_at,
-        updated_at
-        FROM orders
-        <where>
-            <if test="status != null">AND status = #{status}</if>
-            <if test="paymentType != null">AND payment_type = #{paymentType}</if>
-            <if test="orderNo != null and orderNo != ''">AND order_no LIKE CONCAT('%', #{orderNo}, '%')</if>
-            <if test="userId != null">AND user_id = #{userId}</if>
-            <if test="startDate != null">AND created_at &gt;= #{startDate}</if>
-            <if test="endDate != null">AND created_at &lt;= #{endDate}</if>
-        </where>
-        ORDER BY created_at DESC
-    </select>
+<!--    <insert id="insertOrders" parameterType="cn.mbtt.service.domain.po.Orders">-->
+<!--        INSERT INTO orders (order_no, user_id, total_amount, actual_amount, address_snapshot, status,-->
+<!--                            payment_type, payment_time, shipping_time, delivery_time, completion_time,-->
+<!--                            cancel_time, cancel_reason, created_at, updated_at)-->
+<!--        VALUES (#{orderNo}, #{userId}, #{totalAmount}, #{actualAmount},-->
+<!--                #{addressSnapshot, typeHandler=cn.mbtt.service.handler.JsonMapTypeHandler},-->
+<!--                #{status}, #{paymentType}, #{paymentTime}, #{shippingTime}, #{deliveryTime},-->
+<!--                #{completionTime}, #{cancelTime}, #{cancelReason}, #{createdAt}, #{updatedAt})-->
+<!--    </insert>-->
 
-    <!-- 插入订单数据 -->
-    <insert id="insertOrders" parameterType="cn.mbtt.service.domain.po.Orders">
-        INSERT INTO orders (order_no, user_id, total_amount, actual_amount, address_snapshot, status,
-                            payment_type, payment_time, shipping_time, delivery_time, completion_time,
-                            cancel_time, cancel_reason, created_at, updated_at)
-        VALUES (#{orderNo}, #{userId}, #{totalAmount}, #{actualAmount}, #{addressSnapshot}, #{status},
-                #{paymentType}, #{paymentTime}, #{shippingTime}, #{deliveryTime}, #{completionTime},
-                #{cancelTime}, #{cancelReason}, #{createdAt}, #{updatedAt})
-    </insert>
+<!--    <select id="queryById" resultMap="OrderResultMap">-->
+<!--        SELECT * FROM orders WHERE id = #{orderId} AND status = 0 AND delete_status = 0-->
+<!--    </select>-->
 
-
-</mapper>
+<!--    <update id="update" parameterType="cn.mbtt.service.domain.po.Orders">-->
+<!--        UPDATE orders-->
+<!--        SET status = -1, cancel_time = NOW(), cancel_reason = #{cancelReason}-->
+<!--        WHERE id = #{id}-->
+<!--    </update>-->
+<!--</mapper>-->

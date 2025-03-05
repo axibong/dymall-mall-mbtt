@@ -18,6 +18,7 @@ import cn.mbtt.service.service.UserService;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,37 +44,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult<OrderVO> queryOrders(OrdersPageQueryDTO dto) {
-        // 1. 获取当前用户并设置查询条件
         Users currentUser = userService.getCurrentUser();
         dto.setUserId(currentUser.getId());
 
-        // 2. 分页查询订单
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        Page<Orders> page = orderMapper.queryOrders(dto);
+        List<Orders> orders = orderMapper.queryOrders(dto);
+        PageInfo<Orders> pageInfo = new PageInfo<>(orders);
 
-        // 3. 批量查询所有订单项（避免 N+1 问题）
-        List<Long> orderIds = page.getResult().stream()
-                .map(Orders::getId)
-                .collect(Collectors.toList());
-        List<OrderItems> allOrderItems = orderItemMapper.selectByOrderIds(orderIds);
+        List<Long> orderIds = orders.stream().map(Orders::getId).collect(Collectors.toList());
+        List<OrderItems> allOrderItems = orderIds.isEmpty() ? Collections.emptyList() : orderItemMapper.selectByOrderIds(orderIds);
         Map<Long, List<OrderItems>> itemsByOrderId = allOrderItems.stream()
                 .collect(Collectors.groupingBy(OrderItems::getOrderId));
 
-        // 4. 转换为 VO 列表
-        List<OrderVO> voList = page.getResult().stream()
+        List<OrderVO> voList = orders.stream()
                 .map(order -> {
                     OrderVO vo = convertToOrderVO(order);
-                    //vo.setItems(convertOrderItems(itemsByOrderId.get(order.getId())));
-                    // 使用getOrDefault处理空items
-                    vo.setItems(convertOrderItems(
-                            itemsByOrderId.getOrDefault(order.getId(), Collections.emptyList())
-                    ));
+                    vo.setItems(convertOrderItems(itemsByOrderId.getOrDefault(order.getId(), Collections.emptyList())));
                     return vo;
                 })
                 .collect(Collectors.toList());
 
-        return new PageResult<>(page.getTotal(), voList);
-
+        return new PageResult<>(pageInfo.getTotal(), voList);
     }
 
     @Transactional
@@ -92,43 +83,27 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void cancelOrder(Long orderId) {
-        // 获取当前用户的ID
         Long userId = userService.getCurrentUser().getId();
-
-        // 根据订单ID查询订单
         Orders orders = orderMapper.queryById(orderId);
         if (orders == null) {
             throw new OrderBusinessException("订单不存在");
         }
-
-        // 判断当前用户是否是该订单的所有者
         if (!orders.getUserId().equals(userId)) {
             throw new OrderBusinessException("无权操作该订单");
         }
-
-        // 判断订单状态是否可以取消（假设状态 > 0 表示订单已经支付或已发货等，不允许取消）
         if (orders.getStatus() > 0) {
             throw new OrderBusinessException("当前状态不允许取消");
         }
-
-        // 判断订单创建时间是否超过了30分钟，超过则不能取消
-        if (orders.getCreatedAt() != null &&
-                LocalDateTime.now().isAfter(orders.getCreatedAt().plusMinutes(30))) {
+        if (orders.getCreatedAt() != null && LocalDateTime.now().isAfter(orders.getCreatedAt().plusMinutes(30))) {
             throw new OrderBusinessException("已超过可取消时间");
         }
 
-        // 更新订单状态为取消，设置取消时间
-        orders.setStatus(-1); // -1 表示取消状态
+        orders.setStatus(-1);
         orders.setCancelTime(LocalDateTime.now());
+        String cancelReason = "用户主动取消"; // 默认值直接赋值
+        orders.setCancelReason(cancelReason);
 
-        // 设置取消原因，若取消原因为空，则默认设置为“用户主动取消”
-        String cancelReason = "";
-        orders.setCancelReason(StringUtils.hasText(cancelReason) ? cancelReason : "用户主动取消");
-
-        // 更新订单信息
         orderMapper.update(orders);
-
-        // 执行取消后的处理逻辑（解锁库存,退钱）
         afterCancelHandler(orders);
     }
 
@@ -143,66 +118,6 @@ public class OrderServiceImpl implements OrderService {
 //        }
     }
 
-
-//TODO 写全
-//    @Transactional
-//    @Override
-//    public void cancelOrder(Long orderId, String cancelReason) {
-//        // 1. 获取当前用户
-//        Long currentUserId = userService.getCurrentUser().getId();
-//
-//        // 2. 查询订单（带悲观锁）
-//        Orders order = orderMapper.selectForUpdate(orderId);
-//        if (order == null) {
-//            throw new BusinessException(404, "订单不存在");
-//        }
-//
-//        // 3. 权限校验
-//        if (!order.getUserId().equals(currentUserId)) {
-//            throw new BusinessException(403, "无权操作该订单");
-//        }
-//
-//        // 4. 状态校验
-//        if (!canCancel(order.getStatus())) {
-//            throw new BusinessException(409, "当前状态不允许取消");
-//        }
-//
-//        // 5. 时效性校验（例如：支付后30分钟内可取消）
-//        if (order.getPaymentTime() != null &&
-//                LocalDateTime.now().isAfter(order.getPaymentTime().plusMinutes(30))) {
-//            throw new BusinessException(409, "已超过可取消时间");
-//        }
-//
-//        // 6. 更新订单
-//        order.setStatus(-1);
-//        order.setCancelTime(LocalDateTime.now());
-//        order.setCancelReason(StringUtils.hasText(cancelReason) ?
-//                cancelReason : "用户主动取消");
-//        orderMapper.update(order);
-//
-//        // 7. 后续处理
-//        afterCancelHandler(order);
-//    }
-//
-//    // 可取消的状态：待支付(0)、已支付(1)
-//    private boolean canCancel(Integer status) {
-//        return status == 0 || status == 1;
-//    }
-//
-//    // 后续处理（异步）
-//    @Async
-//    protected void afterCancelHandler(Orders order) {
-//        // 1. 库存回滚
-//        inventoryService.rollbackStock(order.getId());
-//
-//        // 2. 支付退款（若已支付）
-//        if (order.getStatus() == 1) {
-//            paymentService.refund(order.getOrderNo(), order.getActualAmount());
-//        }
-//
-//        // 3. 记录操作日志
-//        auditLogService.log(order.getId(), "订单取消");
-//    }
 
     /**
      * 单个 Orders 转换为 OrderVO（基础字段）

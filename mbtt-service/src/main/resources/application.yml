@@ -57,9 +57,12 @@ spring:
         - discovery.type=single-node
         - ES_JAVA_OPTS=-Xms512m -Xmx512m
 
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+
 mybatis:
-  # mapper配置文件
-  mapper-locations: classpath:mapper/*.xml
+  #mapper-locations: classpath:mapper/*.xml
   type-aliases-package: cn.mbtt.service.domain.po
   type-handlers-package: cn.mbtt.service.handler  # 指定 TypeHandler 类所在包
   configuration:

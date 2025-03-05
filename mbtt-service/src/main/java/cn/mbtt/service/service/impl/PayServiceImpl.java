@@ -8,15 +8,18 @@ import cn.mbtt.service.handler.AbstractPayStrategyHandler;
 import cn.mbtt.service.mapper.PayMapper;
 import cn.mbtt.service.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
+@Service
 public class PayServiceImpl implements PayService {
 
     @Autowired
     private PayMapper payMapper;
     @Autowired
-    private AbstractPayStrategyHandler abstractPayStrategyHandler;
+    private List<AbstractPayStrategyHandler> handlers; // 注入所有策略实现
 
     @Override
     public void pay(PayReqDTO payReqDTO) {
@@ -30,7 +33,12 @@ public class PayServiceImpl implements PayService {
         //2.paymentRecords插入数据库
         payMapper.insert(paymentRecords);
         //3.获取对应支付策略
-        AbstractPayStrategyHandler chooseHandler = abstractPayStrategyHandler.choose(PaymentTypeEnum.getPaymentTypeByCode(payReqDTO.getPaymentType()));
-        chooseHandler.pay();
+        // 动态选择策略
+        String paymentType = PaymentTypeEnum.getPaymentTypeByCode(payReqDTO.getPaymentType());
+        AbstractPayStrategyHandler handler = handlers.stream()
+                .filter(h -> h.paymentType().equals(paymentType))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported payment type: " + paymentType));
+        handler.pay();
     }
 }

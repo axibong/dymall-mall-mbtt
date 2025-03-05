@@ -34,8 +34,8 @@ public class OrderController {
         ));
     }
 
-    @ApiOperation("创建订单")
-    @PostMapping("/create")
+   // @ApiOperation("创建订单")
+   // @PostMapping("/create")
     public CommonResult<OrderVO> createOrder(@RequestBody OrdersSubmitDTO ordersSubmitDTO) {
         OrderVO orderVO = orderService.createOrder(ordersSubmitDTO);
         return CommonResult.success(orderVO);
@@ -49,8 +49,8 @@ public class OrderController {
 //        return CommonResult.success(updatedOrder);
 //    }
 
-    @ApiOperation("取消未支付订单")
-    @PutMapping("/{orderId}/cancel")
+//    @ApiOperation("取消未支付订单")
+//    @PutMapping("/{orderId}/cancel")
     public CommonResult<Void> cancelOrder(@PathVariable Long orderId) {
         orderService.cancelOrder(orderId);
         return CommonResult.success(null);
