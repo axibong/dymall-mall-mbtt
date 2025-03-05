@@ -52,4 +52,5 @@ public class CartController {
             @ApiParam(value = "商品 ID", required = true) @RequestParam Long productId) {
         cartService.removeItemFromCart(productId);
     }
+
 }
